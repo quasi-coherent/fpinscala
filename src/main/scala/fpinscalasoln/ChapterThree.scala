@@ -1,8 +1,5 @@
 package fpinscalasoln
 
-/**
-  * Created by dmdonohue on 7/7/16.
-  */
 object ChapterThree {
   sealed trait List[+A]
   case object Nil extends List[Nothing]
