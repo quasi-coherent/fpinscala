@@ -1,5 +1,6 @@
 package fpinscalasoln
 
+
 object ChapterTwo {
 
   // Calculate the nth Fibonacci number
