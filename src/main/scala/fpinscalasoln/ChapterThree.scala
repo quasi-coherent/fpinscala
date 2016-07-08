@@ -45,8 +45,9 @@ object ChapterThree {
     }
 
     // Remove elements as long as `f` is true.
-    def dropWhile[A](l: List[A], f: A => Boolean): List[A] = {
-
+    def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
+      case Cons(h, t) if f(h) => dropWhile(t, f)
+      case _ => l
     }
 
     def apply[A](as: A*): List[A] =
