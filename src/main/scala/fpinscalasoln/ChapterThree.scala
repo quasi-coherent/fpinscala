@@ -6,12 +6,12 @@ object ChapterThree {
   case class Cons[+A](head: A, tail: List[A]) extends List[A]
 
   object List {
-    def sum(l: List[Int]): Int = l match {
+    def sum(ints: List[Int]): Int = ints match {
       case Nil => 0
       case Cons(h, t) => h + sum(t)
     }
 
-    def product(l: List[Double]): Double = l match {
+    def product(ds: List[Double]): Double = ds match {
       case Nil => 1.0
       case Cons(0.0, _) => 0.0
       case Cons(h, t) => h * product(t)
@@ -20,31 +20,39 @@ object ChapterThree {
     // Return the tail of the list.  We choose to return
     // the empty list if the tail of the empty list is
     // requested.
-    def tail[A](l: List[A]): List[A] = l match {
+    def tail[A](as: List[A]): List[A] = as match {
       case Nil => Nil
       case Cons(_, t) => t
     }
 
     // Set the head of the list.  Again, we choose not to throw
     // an error if the empty list is passed to setHead.
-    def setHead[A](h: A, l: List[A]): List[A] = l match {
-      case Nil => Cons(h, Nil)
-      case Cons(_, t) => Cons(h, t)
+    def setHead[A](a: A, as: List[A]): List[A] = as match {
+      case Nil => Cons(a, Nil)
+      case Cons(_, t) => Cons(a, t)
     }
 
     // Remove the first n elements of a list.
-    def drop[A](l: List[A], n: Int): List[A] = {
-      if (n <= 0) l
-      else l match {
+    def drop[A](as: List[A], n: Int): List[A] = {
+      if (n <= 0) as
+      else as match {
         case Nil => Nil
         case Cons(h, t) => drop(t, n - 1)
       }
     }
 
     // Remove elements as long as `f` is true.
-    def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
+    def dropWhile[A](as: List[A], f: A => Boolean): List[A] = as match {
       case Cons(h, t) if f(h) => dropWhile(t, f)
-      case _ => l
+      case _ => as
+    }
+
+    // Return all but the last element. Why can't this function
+    // be implemented in constant time?
+    def init[A](as: List[A]): List[A] = as match {
+      case Nil => Nil
+      case Cons(_, Nil) => Nil
+      case Cons(h, t) => Cons(h, init(t))
     }
 
     def apply[A](as: A*): List[A] =
