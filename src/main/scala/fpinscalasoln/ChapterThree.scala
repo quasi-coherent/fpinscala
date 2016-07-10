@@ -13,7 +13,6 @@ object ChapterThree {
 
     def product(ds: List[Double]): Double = ds match {
       case Nil => 1.0
-      case Cons(0.0, _) => 0.0
       case Cons(h, t) => h * product(t)
     }
 
@@ -54,6 +53,15 @@ object ChapterThree {
       case Cons(_, Nil) => Nil
       case Cons(h, t) => Cons(h, init(t))
     }
+
+    def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match {
+      case Nil => z
+      case Cons(h, t) => f(h, foldRight(t, z)(f))
+    }
+
+    def sum2(ints: List[Int]): Int = foldRight(ints, 0)(_ + _)
+
+    def prod2(ds: List[Double]): Double = foldRight(ds, 1.0)(_ * _)
 
     def apply[A](as: A*): List[A] =
       if (as.isEmpty) Nil
