@@ -96,6 +96,13 @@ object ChapterThree {
       foldRight2(as, Cons(a, Nil))((x, xs) => Cons(x, xs))
 
     // A function to flatten a list of lists.
-    def flatten[A](ls: List[List[A]]): List[A] = ???
+    def flatten[A](ls: List[List[A]]): List[A] = {
+      // Helper function to concatenate two lists.
+      def concat(l: List[A], r: List[A]): List[A] =
+        foldRight2(l, r)(Cons(_, _))
+      foldRight2(ls, Nil: List[A])(concat)
+    }
+
+    def addOne(ints: List[Int]): List[Int] = ???
   }
 }
