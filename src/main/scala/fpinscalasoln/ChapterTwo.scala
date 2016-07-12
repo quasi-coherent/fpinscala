@@ -11,7 +11,7 @@ object ChapterTwo {
   }
 
   // Whether a list of type `A` is sorted according to `ordered`
-  def isSorted[A](as: Array[A], ordered: (A, A) => Boolean): Boolean = {
+  def isSorted[A](as: List[A])(ordered: (A, A) => Boolean): Boolean = {
     def loop(n: Int): Boolean =
       if (n >= as.length - 1) true
       else if (!ordered(as(n), as(n + 1))) false
@@ -22,7 +22,8 @@ object ChapterTwo {
   // Convert a function `f` of two arguments into a function of
   // one argument that partially applies f
   def curry[A, B, C](f: (A, B) => C): A => (B => C) =
-    (a: A) => (b: B) => f(a, b)
+    a => b => f(a, b) // Do not need to specify the types of `a` and `b`
+                      // because
 
   // Reverse this
   def uncurry[A, B, C](f: A => B => C): (A, B) => C =
