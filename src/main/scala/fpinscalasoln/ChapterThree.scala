@@ -16,6 +16,10 @@ object ChapterThree {
       case Cons(h, t) => h * product(t)
     }
 
+    def apply[A](as: A*): List[A] =
+      if (as.isEmpty) Nil
+      else Cons(as.head, apply(as.tail: _*))
+
     // Return the tail of the list.  We choose to return
     // the empty list if the tail of the empty list is
     // requested.
@@ -54,25 +58,44 @@ object ChapterThree {
       case Cons(h, t) => Cons(h, init(t))
     }
 
+    // Generalize `fold` and `prod` to a higher-order function...
     def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match {
       case Nil => z
       case Cons(h, t) => f(h, foldRight(t, z)(f))
     }
 
+    // and use this to re-write `sum` and `prod`.
     def sum2(ints: List[Int]): Int = foldRight(ints, 0)(_ + _)
 
     def prod2(ds: List[Double]): Double = foldRight(ds, 1.0)(_ * _)
 
-    def apply[A](as: A*): List[A] =
-      if (as.isEmpty) Nil
-      else Cons(as.head, apply(as.tail: _*))
-  }
+    // Compute the length of a list using `foldRight`.
+    def length[A](as: List[A]): Int = foldRight(as, 0)((_, acc) => acc + 1)
 
-  val x = List(1, 2, 3, 4, 5) match {
-    case Cons(x, Cons(2, Cons(4, _))) => x
-    case Nil => 42
-    case Cons(x, Cons(y, Cons(3, Cons(4, _)))) => x + y
-    case Cons(h, t) => h + List.sum(t)
-    case _ => 101
-  } // x: Int = 3
+    // Our implementation of `foldRight` is not stack-safe.  Write a
+    // function `foldLeft` that is tail-recursive.
+    def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match {
+      case Nil => z
+      case Cons(h, t) => foldLeft(t, f(z, h))(f)
+    }
+
+    // Re-write `sum` and `prod` using `foldLeft`.
+    def sum3(ints: List[Int]): Int = foldLeft(ints, 0)(_ + _)
+
+    def prod3(ds: List[Double]): Double = foldLeft(ds, 1.0)(_ * _)
+
+    // A function to reverse a list using `fold`.
+    def reverse[A](as: List[A]): List[A] = foldLeft(as, Nil: List[A])((l, a) => Cons(a, l))
+
+    // Write `foldRight` in terms of `foldLeft`.  Now `foldRight` is tail-recursive.
+    def foldRight2[A, B](as: List[A], z: B)(f: (A, B) => B): B =
+      foldLeft(reverse(as), z)((b, a) => f(a, b))
+
+    // Implement `append` using a `foldLeft`.
+    def append[A](as: List[A], a: A): List[A] =
+      foldRight2(as, Cons(a, Nil))((x, xs) => Cons(x, xs))
+
+    // A function to flatten a list of lists.
+    def flatten[A](ls: List[List[A]]): List[A] = ???
+  }
 }
