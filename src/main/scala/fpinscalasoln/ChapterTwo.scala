@@ -23,14 +23,14 @@ object ChapterTwo {
   // one argument that partially applies f
   def curry[A, B, C](f: (A, B) => C): A => (B => C) =
     a => b => f(a, b) // Do not need to specify the types of `a` and `b`
-                      // because
+                      // because they are inferred.
 
   // Reverse this
   def uncurry[A, B, C](f: A => B => C): (A, B) => C =
-    (a: A, b: B) => f(a)(b)
+    (a, b) => f(a)(b)
 
   // Compose two functions
   def compose[A, B, C](f: A => B, g: B => C): A => C =
-    (a: A) => g(f(a))
+    a => g(f(a))
 
 }
