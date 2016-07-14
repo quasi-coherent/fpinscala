@@ -103,6 +103,17 @@ object ChapterThree {
       foldRight2(ls, Nil: List[A])(concat)
     }
 
-    def addOne(ints: List[Int]): List[Int] = ???
+    // As a preliminary to `map`, write a pure function to add one to each element
+    // in a list of `Ints`.
+    def addOne(ints: List[Int]): List[Int] =
+      foldRight2(ints, Nil: List[Int])((int, l) => Cons(int + 1, l))
+
+    // Implement `map`.
+    def map[A, B](as: List[A])(f: A => B): List[B] =
+      foldRight2(as, Nil: List[B])((a, bs) => Cons(f(a), bs))
+
+    // Implement `filter`.
+    def filter[A](as: List[A])(f: A => Boolean): List[A] = ???
+
   }
 }
