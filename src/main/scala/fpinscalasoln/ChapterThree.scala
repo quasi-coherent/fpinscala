@@ -113,7 +113,8 @@ object ChapterThree {
       foldRight2(as, Nil: List[B])((a, bs) => Cons(f(a), bs))
 
     // Implement `filter`.
-    def filter[A](as: List[A])(f: A => Boolean): List[A] = ???
+    def filter[A](as: List[A])(f: A => Boolean): List[A] =
+      foldRight2(as, Nil: List[A])((x, xs) => if (f(x)) Cons(x, xs) else xs)
 
   }
 }
