@@ -2,8 +2,10 @@ package fpinscalasoln
 
 object ChapterThree {
 
-  /** In this chapter we implement the singly-linked list and many common
-    * functions of it.  Main concepts are pattern matching and folding.
+  /** In this chapter we implement the singly-linked list and binary tree data
+    * structures in a functional way.
+    *
+    * Main concepts are pattern matching and folding.
     */
 
   sealed trait List[+A]
@@ -122,12 +124,68 @@ object ChapterThree {
     foldRight2(as, Nil: List[A])((x, xs) => if (f(x)) Cons(x, xs) else xs)
 
     // Implement `flatMap`.
-    def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = ???
+    def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
+      flatten(map(as)(f))
 
     // Use `flatMap` to implement `filter`.
-    def filter2[A](as: List[A])(f: A => Boolean): List[A] = ???
+    def filter2[A](as: List[A])(f: A => Boolean): List[A] =
+      flatMap(as)(a => if (f(a)) Cons(a, Nil) else Nil)
 
-    // Implement `zipWith`.
-    def zipWith[A, B, C](as: List[A], bs: List[B])(f: (A, B) => C): List[C] = ???
+    // Implement `zipWith`, which takes a `List[A]` and a `List[B]` and combines
+    // corresponding elements of each using `f: (A, B) => C`.
+    def zipWith[A, B, C](as: List[A], bs: List[B])(f: (A, B) => C): List[C] = (as, bs) match {
+      case (_, Nil) => Nil
+      case (Nil, _) => Nil
+      case (Cons(h1, t1), Cons(h2, t2)) => Cons(f(h1, h2), zipWith(t1, t2)(f))
+    }
+
+    // Implement `hasSubsequence`, which determines whether a list contains another
+    // list as a subsequence.
+    def hasSubsequence[A](as: List[A], sub: List[A]): Boolean = {
+      // Helper function to determine if a list `as` starts with another list `sub`.
+      def startsWith(as: List[A], sub: List[A]): Boolean = (as, sub) match {
+        case (_, Nil) => true
+        case (Cons(h1, t1), Cons(h2, t2)) if h1 == h2 => startsWith(t1, t2)
+        case _ => false
+      }
+      as match {
+        case Nil => sub == Nil
+        case _ if startsWith(as, sub) => true
+        case Cons(h, t) => hasSubsequence(t, sub)
+      }
+    }
+  }
+
+  sealed trait Tree[+A]
+  case class Leaf[A](value: A) extends Tree[A]
+  case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+
+  object Tree {
+    // A method to count the number of nodes in a `Tree`.  Not stack-safe.
+    def size[A](t: Tree[A]): Int = t match {
+      case Leaf(_) => 1
+      case Branch(left, right) => 1 + size(left) + size(right)
+    }
+
+    // A function to determine the maximum element in a `Tree[Int]`.
+    def maximum(t: Tree[Int]): Int = t match {
+      case Leaf(int) => int
+      case Branch(left, right) => maximum(left).max(maximum(right)) // Using built-in `max` on `Int`s.
+    }
+
+    // Write a function `depth` that returns the maximum path length from the root
+    // to any leaf.
+    def depth[A](t: Tree[A]): Int = t match {
+      case Leaf(_) => 0
+      case Branch(left, right) => depth(left).max(depth(right))
+    }
+
+    // Write a function `map` that modifies each element in a tree with a give function.
+    def map[A, B](t: Tree[A])(f: A => B): Tree[B] = t match {
+      case Leaf(a) => Leaf(f(a))
+      case Branch(left, right) => Branch(map(left)(f), map(right)(f))
+    }
+
+    def fold[A, B](t: Tree[A])(f: A => B)(g: (B, B) => B): B = ???
   }
 }
