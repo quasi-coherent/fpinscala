@@ -11,7 +11,7 @@ object ChapterTwo {
   }
 
   // Whether a list of type `A` is sorted according to `ordered`
-  def isSorted[A](as: List[A])(ordered: (A, A) => Boolean): Boolean = {
+  def isSorted[A](as: scala.List[A])(ordered: (A, A) => Boolean): Boolean = {
     def loop(n: Int): Boolean =
       if (n >= as.length - 1) true
       else if (!ordered(as(n), as(n + 1))) false

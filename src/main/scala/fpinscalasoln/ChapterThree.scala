@@ -1,6 +1,11 @@
 package fpinscalasoln
 
 object ChapterThree {
+
+  /** In this chapter we implement the singly-linked list and many common
+    * functions of it.  Main concepts are pattern matching and folding.
+    */
+
   sealed trait List[+A]
   case object Nil extends List[Nothing]
   case class Cons[+A](head: A, tail: List[A]) extends List[A]
@@ -89,32 +94,32 @@ object ChapterThree {
 
     // Write `foldRight` in terms of `foldLeft`.  Now `foldRight` is tail-recursive.
     def foldRight2[A, B](as: List[A], z: B)(f: (A, B) => B): B =
-      foldLeft(reverse(as), z)((b, a) => f(a, b))
+    foldLeft(reverse(as), z)((b, a) => f(a, b))
 
     // Implement `append` using a `foldLeft`.
     def append[A](as: List[A], a: A): List[A] =
-      foldRight2(as, Cons(a, Nil))((x, xs) => Cons(x, xs))
+    foldRight2(as, Cons(a, Nil))((x, xs) => Cons(x, xs))
 
     // A function to flatten a list of lists.
     def flatten[A](ls: List[List[A]]): List[A] = {
       // Helper function to concatenate two lists.
       def concat(l: List[A], r: List[A]): List[A] =
-        foldRight2(l, r)(Cons(_, _))
+      foldRight2(l, r)(Cons(_, _))
       foldRight2(ls, Nil: List[A])(concat)
     }
 
     // As a preliminary to `map`, write a pure function to add one to each element
     // in a list of `Ints`.
     def addOne(ints: List[Int]): List[Int] =
-      foldRight2(ints, Nil: List[Int])((int, l) => Cons(int + 1, l))
+    foldRight2(ints, Nil: List[Int])((int, l) => Cons(int + 1, l))
 
     // Implement `map`.
     def map[A, B](as: List[A])(f: A => B): List[B] =
-      foldRight2(as, Nil: List[B])((a, bs) => Cons(f(a), bs))
+    foldRight2(as, Nil: List[B])((a, bs) => Cons(f(a), bs))
 
     // Implement `filter`.
     def filter[A](as: List[A])(f: A => Boolean): List[A] =
-      foldRight2(as, Nil: List[A])((x, xs) => if (f(x)) Cons(x, xs) else xs)
+    foldRight2(as, Nil: List[A])((x, xs) => if (f(x)) Cons(x, xs) else xs)
 
     // Implement `flatMap`.
     def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = ???
@@ -124,6 +129,5 @@ object ChapterThree {
 
     // Implement `zipWith`.
     def zipWith[A, B, C](as: List[A], bs: List[B])(f: (A, B) => C): List[C] = ???
-
   }
 }
