@@ -116,5 +116,14 @@ object ChapterThree {
     def filter[A](as: List[A])(f: A => Boolean): List[A] =
       foldRight2(as, Nil: List[A])((x, xs) => if (f(x)) Cons(x, xs) else xs)
 
+    // Implement `flatMap`.
+    def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = ???
+
+    // Use `flatMap` to implement `filter`.
+    def filter2[A](as: List[A])(f: A => Boolean): List[A] = ???
+
+    // Implement `zipWith`.
+    def zipWith[A, B, C](as: List[A], bs: List[B])(f: (A, B) => C): List[C] = ???
+
   }
 }

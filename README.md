@@ -1,2 +1,2 @@
 ## fpinscala
-Exercises from Functional Programming in Scala by P. Chiusano &amp; R. Bjarnason.  
+Exercises from <i>Functional Programming in Scala</i> by P. Chiusano &amp; R. Bjarnason.  
