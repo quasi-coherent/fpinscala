@@ -170,7 +170,7 @@ object ChapterThree {
     // A function to determine the maximum element in a `Tree[Int]`.
     def maximum(t: Tree[Int]): Int = t match {
       case Leaf(int) => int
-      case Branch(left, right) => maximum(left).max(maximum(right)) // Using built-in `max` on `Int`s.
+      case Branch(left, right) => maximum(left).max(maximum(right)) // Using built-in `max` on `Numeric`s.
     }
 
     // Write a function `depth` that returns the maximum path length from the root
@@ -180,12 +180,26 @@ object ChapterThree {
       case Branch(left, right) => depth(left).max(depth(right))
     }
 
-    // Write a function `map` that modifies each element in a tree with a give function.
+    // Write a function `map` that modifies each element in a tree with a given function.
     def map[A, B](t: Tree[A])(f: A => B): Tree[B] = t match {
       case Leaf(a) => Leaf(f(a))
       case Branch(left, right) => Branch(map(left)(f), map(right)(f))
     }
 
-    def fold[A, B](t: Tree[A])(f: A => B)(g: (B, B) => B): B = ???
+    // Generalize these with `fold` that abstracts over their similarities.
+    def fold[A, B](t: Tree[A])(f: A => B)(g: (B, B) => B): B = t match {
+      case Leaf(a) => f(a)
+      case Branch(left, right) => g(fold(left)(f)(g), fold(right)(f)(g))
+    }
+
+    // Rewrite `size`, `maximum`, `depth`, `map` with `fold`.
+    def size2[A](t: Tree[A]): Int = fold(t)(_ => 1)(1 + _ + _)
+
+    def maximum2(t: Tree[Int]): Int = fold(t)(int => int)(_.max(_))
+
+    def depth2[A](t: Tree[A]): Int = fold(t)(_ => 0)(1 + _.max(_))
+
+    def map2[A, B](t: Tree[A])(f: A => B): Tree[B] =
+      fold(t)(a => Leaf(f(a)): Tree[B])(Branch(_, _))
   }
 }
