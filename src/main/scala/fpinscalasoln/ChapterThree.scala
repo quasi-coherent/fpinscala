@@ -65,7 +65,7 @@ object ChapterThree {
       case Cons(h, t) => Cons(h, init(t))
     }
 
-    // Generalize `fold` and `prod` to a higher-order function...
+    // Generalize `sum` and `prod` to a higher-order function...
     def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match {
       case Nil => z
       case Cons(h, t) => f(h, foldRight(t, z)(f))
