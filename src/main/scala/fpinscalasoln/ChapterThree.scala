@@ -15,7 +15,8 @@ object ChapterThree {
   object List {
     def sum(ints: List[Int]): Int = ints match {
       case Nil => 0
-      case Cons(h, t) => h + sum(t)
+      case Cons(h, t) => h + sum(t) // Not tail-recursive because the recursive call
+                                    // is wrapped in a call to +
     }
 
     def product(ds: List[Double]): Double = ds match {
@@ -27,9 +28,7 @@ object ChapterThree {
       if (as.isEmpty) Nil
       else Cons(as.head, apply(as.tail: _*))
 
-    // Return the tail of the list.  We choose to return
-    // the empty list if the tail of the empty list is
-    // requested.
+    // Return the tail of the list.
     def tail[A](as: List[A]): List[A] = as match {
       case Nil => Nil
       case Cons(_, t) => t
@@ -96,7 +95,7 @@ object ChapterThree {
 
     // Write `foldRight` in terms of `foldLeft`.  Now `foldRight` is tail-recursive.
     def foldRight2[A, B](as: List[A], z: B)(f: (A, B) => B): B =
-    foldLeft(reverse(as), z)((b, a) => f(a, b))
+      foldLeft(reverse(as), z)((b, a) => f(a, b))
 
     // Implement `append` using a `foldLeft`.
     def append[A](as: List[A], a: A): List[A] =
@@ -106,7 +105,7 @@ object ChapterThree {
     def flatten[A](ls: List[List[A]]): List[A] = {
       // Helper function to concatenate two lists.
       def concat(l: List[A], r: List[A]): List[A] =
-      foldRight2(l, r)(Cons(_, _))
+        foldRight2(l, r)(Cons(_, _))
       foldRight2(ls, Nil: List[A])(concat)
     }
 
